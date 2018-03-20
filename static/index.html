@@ -3,20 +3,27 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Cedarville+Cursive" rel="stylesheet">
   <link rel="stylesheet" href="./stylesheets/style.css">
 </head>
 
 <body>
   <header>
-    <div class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand" href="#"><i class="fas fa-lemon"></i>Foodie Blog</a>
+      <ul class="navbar-nav ml-auto">
+        <li><a class="nav-item nav-link active" href="#"><i class="fab fa-twitter"></i></a></li>
+        <a class="nav-item nav-link" href="#"><i class="fab fa-facebook"></i></a>
+        <a class="nav-item nav-link" href="#"><i class="fab fa-instagram"></i></a>
+      </div>
     </div>
+
   </header>
 
   <div id="recipe_view" class="modal">
     <span class="close" onclick="close_modal()">&times;</span>
     <div id="recipe_view_content" class="card modal-content col-md-6 offset-md-3">
-      <img id="card-img" class="card-img-top" src="./images/lamb-ragu_1801.jpg" alt="Card image cap">
+      <img id="card-img" class="card-img-top" src="" alt="Card image cap">
       <div class="card-body text-center">
         <h5 id="card-title" class="card-title"></h5>
         <p id="card-text" class="card-text"></p>
@@ -39,7 +46,6 @@
       <div class="row">
         <div class="col-md-4 text-center">
           <div class="text-center recipe">
-
             <img class="food-img" src="./images/lamb-ragu_1801.jpg"/>
             <small class="text-success">$ Paid Content</small>
             <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Spicy Lamb Ragu')"> Spicy Lamb Ragu </a> </p>
@@ -67,9 +73,48 @@
             <p class="lead text-muted">Price: $</p>
           </div>
         </div>
-    </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+            <img class="food-img" src="./images/yoshinoya-gyudon-recipe_5786.jpg"/>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Yoshinoya Gyudon')"> Yoshinoya Gyudon </a> </p>
+            <p class="lead text-muted">Time to make: 15 mins</p>
+            <p class="lead text-muted">Price: $$</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+
+            <img class="food-img" src="./images/IAM_8210.jpg"/>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Malaysian Roti')"> Malaysian Roti </a> </p>
+            <p class="lead text-muted">Time to make: 5 mins</p>
+            <p class="lead text-muted">Price: $</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+
+            <img class="food-img" src="./images/instant-pot-bo-kho-recipe_7469.jpg"/>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Pot Bo Kho')"> Pot Bo Kho </a> </p>
+            <p class="lead text-muted">Time to make: 40 mins</p>
+            <p class="lead text-muted">Price: $</p>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
+  <footer>
+    <div class="link-container">
+      <p><a href="https://interledger.org"> Interledger </a> </p>
+      <p><a href="https://github.com/interledger/rfcs/blob/master/0028-web-monetization/0028-web-monetization.md"> Web Monetization </a></p>
+      <p><a href="http://harafian.com/"> Other Examples </a></p>
+    </div>
+    <p>Interledger © 2018 </p>
+  </footer>
   <script src="/client.js"></script>
   <script>
 
@@ -86,11 +131,14 @@
     e.preventDefault();
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
+      const modal = document.getElementById('recipe_view')
+      const cardTitle = document.getElementById('card-title')
+      const cardText = document.getElementById('card-text')
+      const cardImage = document.getElementById('card-img')
+      let preventFlicker = false;
       if(this.readyState === 4 && this.status == 200) {
-        const modal = document.getElementById('recipe_view')
-        const cardTitle = document.getElementById('card-title')
-        const cardText = document.getElementById('card-text')
-        const cardImage = document.getElementById('card-img')
+        modal.style = 'display: flex;'
+        preventFlicker = true;
         switch (this.responseText) {
           case 'Spicy Lamb Ragu':
             cardImage.src= './images/lamb-ragu_1801.jpg'
@@ -101,13 +149,29 @@
           case 'Tokyo Tonkotsu Ramen':
             cardImage.src="./images/DSC_2483.jpg"
             break
+          case 'Yoshinoya Gyudon':
+            cardImage.src="./images/yoshinoya-gyudon-recipe_5786.jpg"
+            break
+          case 'Malaysian Roti':
+            cardImage.src="./images/IAM_8210.jpg"
+            break
+          case 'Pot Bo Kho':
+            cardImage.src="./images/instant-pot-bo-kho-recipe_7469.jpg"
+            break
           default:
+            cardImage.src="./images/ilp_logo.svg"
 
         }
-        modal.style = 'display: flex;'
         cardTitle.innerHTML = this.responseText
-        cardText.innerHTML = 'Sample recipe for ' + this.responseText
+        cardText.innerHTML = "Sample recipe for " + this.responseText
       }
+      // else {
+      //   console.log("WHAT");
+      //   cardImage.src="./images/ilp_logo.svg"
+      //   cardText.innerHTML = "You may have switched off your extension. Please turn it on and refresh the page."
+      //   modal.style = 'display: flex;'
+      //   cardImage.style="width: 70%; margin-left: 15%"
+      // }
     }
     xhttp.open("GET", 'http://localhost:8080/content/' + window.monetizationId + '/' + name)
     xhttp.send()

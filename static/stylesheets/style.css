@@ -2,6 +2,19 @@
   margin-right: 10px;
 }
 
+.navbar {
+  background: #ff7675;
+}
+
+.navbar-brand {
+  font-family: 'Cedarville Cursive', cursive;
+  color: white !important;
+}
+
+.navbar-nav a {
+  color: white !important;
+  font-size: 20px;
+}
 .showoff {
   margin-top: 15px;
 }
@@ -11,10 +24,13 @@
 }
 .jumbotron-heading {
   font-size: 25px;
+  color: #ff7675;
+  font-family: 'Cedarville Cursive', cursive;
 }
 
 .text-muted {
   font-size: 18px;
+  font-family: arial;
 }
 
 .recipe {
@@ -64,4 +80,26 @@
 }
 .card-img-top {
   max-width: 100%;
+}
+
+footer {
+  display: flex;
+  height: 200px;
+  background: #ff7675;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+}
+
+.link-container {
+  display: flex;
+}
+.link-container p a{
+  margin-left: 10px;
+  color: white;
+}
+
+footer p a:hover {
+  color: white;
 }
