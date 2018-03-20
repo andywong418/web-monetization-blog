@@ -12,6 +12,20 @@
       <a class="navbar-brand" href="#"><i class="fas fa-lemon"></i>Foodie Blog</a>
     </div>
   </header>
+
+  <div id="recipe_view" class="modal">
+    <span class="close" onclick="close_modal()">&times;</span>
+    <div id="recipe_view_content" class="card modal-content col-md-6 offset-md-3">
+      <img id="card-img" class="card-img-top" src="./images/lamb-ragu_1801.jpg" alt="Card image cap">
+      <div class="card-body text-center">
+        <h5 id="card-title" class="card-title"></h5>
+        <p id="card-text" class="card-text"></p>
+        <a href="#" class="btn btn-primary">Isn't this cool? Check out our site!</a>
+    </div>
+
+    </div>
+  </div>
+
   <main>
     <section class="text-center demo-text">
       <div class="container">
@@ -27,7 +41,8 @@
           <div class="text-center recipe">
 
             <img class="food-img" src="./images/lamb-ragu_1801.jpg"/>
-            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Lamb Ragu')"> Spicy Lamb Ragu </a> </p>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Spicy Lamb Ragu')"> Spicy Lamb Ragu </a> </p>
             <p class="lead text-muted">Time to make: 30 mins</p>
             <p class="lead text-muted">Price: $$</p>
           </div>
@@ -36,7 +51,8 @@
           <div class="text-center recipe">
 
             <img class="food-img" src="./images/lemongrass-chicken-recipe_4.jpg"/>
-            <p class="recipe-text"> <a href="#"> Lemongrass Chicken </a> </p>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Lemongrass Chicken')"> Lemongrass Chicken </a> </p>
             <p class="lead text-muted">Time to make: 20 mins</p>
             <p class="lead text-muted">Price: $</p>
           </div>
@@ -45,7 +61,8 @@
           <div class="text-center recipe">
 
             <img class="food-img" src="./images/DSC_2483.jpg"/>
-            <p class="recipe-text"> <a href="#"> Tokyo Tonkotsu Ramen </a> </p>
+            <small class="text-success">$ Paid Content</small>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Tokyo Tonkotsu Ramen')"> Tokyo Tonkotsu Ramen </a> </p>
             <p class="lead text-muted">Time to make: 80 mins</p>
             <p class="lead text-muted">Price: $</p>
           </div>
@@ -55,17 +72,41 @@
   </main>
   <script src="/client.js"></script>
   <script>
+
   getMonetizationId('http://localhost:8080/pay/:id')
     .then(id => {
       window.monetizationId = id
     })
+
+  function close_modal() {
+    const modal = document.getElementById('recipe_view')
+    modal.style = 'display: none;'
+  }
   function readRecipe(e, name) {
     e.preventDefault();
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
-      console.log("?", this.status);
       if(this.readyState === 4 && this.status == 200) {
-        console.log("PAID");
+        const modal = document.getElementById('recipe_view')
+        const cardTitle = document.getElementById('card-title')
+        const cardText = document.getElementById('card-text')
+        const cardImage = document.getElementById('card-img')
+        switch (this.responseText) {
+          case 'Spicy Lamb Ragu':
+            cardImage.src= './images/lamb-ragu_1801.jpg'
+            break
+          case 'Lemongrass Chicken':
+            cardImage.src="./images/lemongrass-chicken-recipe_4.jpg"
+            break
+          case 'Tokyo Tonkotsu Ramen':
+            cardImage.src="./images/DSC_2483.jpg"
+            break
+          default:
+
+        }
+        modal.style = 'display: flex;'
+        cardTitle.innerHTML = this.responseText
+        cardText.innerHTML = 'Sample recipe for ' + this.responseText
       }
     }
     xhttp.open("GET", 'http://localhost:8080/content/' + window.monetizationId + '/' + name)

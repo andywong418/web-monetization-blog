@@ -21,7 +21,6 @@ router.get('/pay/:id', monetization.receiver());
 // for making sure that the call doesn't immediately fail when called on startup.
 router.get('/content/:id/:recipe_name', monetization.paid({ price: 25, awaitBalance: true }), async ctx => {
   // load content by :content_id
-  console.log("ctx", ctx);
   ctx.body = ctx.params.recipe_name;
 
 });
