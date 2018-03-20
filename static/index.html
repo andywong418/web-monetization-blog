@@ -1,0 +1,76 @@
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+  <link rel="stylesheet" href="./stylesheets/style.css">
+</head>
+
+<body>
+  <header>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#"><i class="fas fa-lemon"></i>Foodie Blog</a>
+    </div>
+  </header>
+  <main>
+    <section class="text-center demo-text">
+      <div class="container">
+          <h1 class="jumbotron-heading">Foodie - the first web monetised recipe blog</strong>
+          <p class="lead text-muted showoff">This is a demo site to show off the capabilities of <a href="https://github.com/interledger/rfcs/blob/master/0028-web-monetization/0028-web-monetization.md">Web Monetization</a> and <a href="https://interledger.org">Interledger</a>.</p>
+          <p class="lead text-muted turn"> Turn on your extensions to read a recipe!</p>
+          <p class="lead text-muted"> All images are from <a href="http://iamafoodblog.com/">iamafoodblog</a>.
+      </div>
+    </section>
+    <section class="recipes">
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+
+            <img class="food-img" src="./images/lamb-ragu_1801.jpg"/>
+            <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Lamb Ragu')"> Spicy Lamb Ragu </a> </p>
+            <p class="lead text-muted">Time to make: 30 mins</p>
+            <p class="lead text-muted">Price: $$</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+
+            <img class="food-img" src="./images/lemongrass-chicken-recipe_4.jpg"/>
+            <p class="recipe-text"> <a href="#"> Lemongrass Chicken </a> </p>
+            <p class="lead text-muted">Time to make: 20 mins</p>
+            <p class="lead text-muted">Price: $</p>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <div class="text-center recipe">
+
+            <img class="food-img" src="./images/DSC_2483.jpg"/>
+            <p class="recipe-text"> <a href="#"> Tokyo Tonkotsu Ramen </a> </p>
+            <p class="lead text-muted">Time to make: 80 mins</p>
+            <p class="lead text-muted">Price: $</p>
+          </div>
+        </div>
+    </div>
+    </section>
+  </main>
+  <script src="/client.js"></script>
+  <script>
+  getMonetizationId('http://localhost:8080/pay/:id')
+    .then(id => {
+      window.monetizationId = id
+    })
+  function readRecipe(e, name) {
+    e.preventDefault();
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      console.log("?", this.status);
+      if(this.readyState === 4 && this.status == 200) {
+        console.log("PAID");
+      }
+    }
+    xhttp.open("GET", 'http://localhost:8080/content/' + window.monetizationId + '/' + name)
+    xhttp.send()
+  }
+  </script>
+</body>
+</html>
