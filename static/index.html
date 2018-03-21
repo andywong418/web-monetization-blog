@@ -38,7 +38,7 @@
       <div class="container">
           <h1 class="jumbotron-heading">Foodie - the first web monetised recipe blog</strong>
           <p class="lead text-muted showoff">This is a demo site to show off the capabilities of <a href="https://github.com/interledger/rfcs/blob/master/0028-web-monetization/0028-web-monetization.md">Web Monetization</a> and <a href="https://interledger.org">Interledger</a>.</p>
-          <p class="lead text-muted turn"> Turn on your extensions to read a recipe!</p>
+          <p class="lead text-muted turn"> Turn on your extensions to read a recipe! If you don't pay you can only see two for free.</p>
           <p class="lead text-muted"> All images are from <a href="http://iamafoodblog.com/">iamafoodblog</a>.
       </div>
     </section>
@@ -129,17 +129,22 @@
   }
   function readRecipe(e, name) {
     e.preventDefault();
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      const modal = document.getElementById('recipe_view')
-      const cardTitle = document.getElementById('card-title')
-      const cardText = document.getElementById('card-text')
-      const cardImage = document.getElementById('card-img')
-      let preventFlicker = false;
-      if(this.readyState === 4 && this.status == 200) {
+    fetch('http://localhost:8080/content/' + window.monetizationId + '/' + name)
+      .then(response => {
+        console.log("Response", response);
+        if(!response.ok) {
+          throw Error("ID undefined");
+        }
+        return response.text();
+      })
+      .then(data => {
+        const modal = document.getElementById('recipe_view')
+        const cardTitle = document.getElementById('card-title')
+        const cardText = document.getElementById('card-text')
+        const cardImage = document.getElementById('card-img')
         modal.style = 'display: flex;'
         preventFlicker = true;
-        switch (this.responseText) {
+        switch (data) {
           case 'Spicy Lamb Ragu':
             cardImage.src= './images/lamb-ragu_1801.jpg'
             break
@@ -161,20 +166,22 @@
           default:
             cardImage.src="./images/ilp_logo.svg"
 
-        }
-        cardTitle.innerHTML = this.responseText
-        cardText.innerHTML = "Sample recipe for " + this.responseText
-      }
-      // else {
-      //   console.log("WHAT");
-      //   cardImage.src="./images/ilp_logo.svg"
-      //   cardText.innerHTML = "You may have switched off your extension. Please turn it on and refresh the page."
-      //   modal.style = 'display: flex;'
-      //   cardImage.style="width: 70%; margin-left: 15%"
-      // }
-    }
-    xhttp.open("GET", 'http://localhost:8080/content/' + window.monetizationId + '/' + name)
-    xhttp.send()
+          }
+          cardTitle.innerHTML = data
+          cardText.innerHTML = "Sample recipe for " + data
+      })
+      .catch(err => {
+        const modal = document.getElementById('recipe_view')
+        const cardTitle = document.getElementById('card-title')
+        const cardText = document.getElementById('card-text')
+        const cardImage = document.getElementById('card-img')
+        cardImage.src="./images/ilp_logo.svg"
+        cardText.innerHTML = "You may have switched off your extension. Please turn it on and refresh the page."
+        modal.style = 'display: flex;'
+        cardImage.style="width: 70%; margin-left: 15%"
+      })
+
+
   }
   </script>
 </body>

@@ -19,9 +19,16 @@ router.get('/pay/:id', monetization.receiver());
 // This endpoint charges 100 units to the user with :id
 // If awaitBalance is set to true, the call will stay open until the balance is sufficient. This is convenient
 // for making sure that the call doesn't immediately fail when called on startup.
-router.get('/content/:id/:recipe_name', monetization.paid({ price: 25, awaitBalance: true }), async ctx => {
+router.get('/content/:id/:recipe_name', monetization.paid({ price: 25}), async ctx => {
   // load content by :content_id
-  ctx.body = ctx.params.recipe_name;
+  console.log("CTX", ctx);
+  if(!ctx.params.id || ctx.params.id ==='undefined') {
+    console.log("getting?");
+    ctx.throw(500, "No id identified")
+  } else {
+    ctx.body = ctx.params.recipe_name;
+  }
+
 
 });
 
