@@ -127,61 +127,78 @@
     const modal = document.getElementById('recipe_view')
     modal.style = 'display: none;'
   }
+
+  function showRecipe(data) {
+    const modal = document.getElementById('recipe_view')
+    const cardTitle = document.getElementById('card-title')
+    const cardText = document.getElementById('card-text')
+    const cardImage = document.getElementById('card-img')
+    modal.style = 'display: flex;'
+    switch (data) {
+      case 'Spicy Lamb Ragu':
+        cardImage.src= './images/lamb-ragu_1801.jpg'
+        break
+      case 'Lemongrass Chicken':
+        cardImage.src="./images/lemongrass-chicken-recipe_4.jpg"
+        break
+      case 'Tokyo Tonkotsu Ramen':
+        cardImage.src="./images/DSC_2483.jpg"
+        break
+      case 'Yoshinoya Gyudon':
+        cardImage.src="./images/yoshinoya-gyudon-recipe_5786.jpg"
+        break
+      case 'Malaysian Roti':
+        cardImage.src="./images/IAM_8210.jpg"
+        break
+      case 'Pot Bo Kho':
+        cardImage.src="./images/instant-pot-bo-kho-recipe_7469.jpg"
+        break
+      default:
+        cardImage.src="./images/ilp_logo.svg"
+
+      }
+      cardTitle.innerHTML = data
+      cardText.innerHTML = "Sample recipe for " + data
+  }
+  
   function readRecipe(e, name) {
     e.preventDefault();
+
     fetch('http://localhost:8080/content/' + window.monetizationId + '/' + name)
       .then(response => {
-        console.log("Response", response);
         if(!response.ok) {
           throw Error("ID undefined");
         }
         return response.text();
       })
       .then(data => {
-        const modal = document.getElementById('recipe_view')
-        const cardTitle = document.getElementById('card-title')
-        const cardText = document.getElementById('card-text')
-        const cardImage = document.getElementById('card-img')
-        modal.style = 'display: flex;'
-        preventFlicker = true;
-        switch (data) {
-          case 'Spicy Lamb Ragu':
-            cardImage.src= './images/lamb-ragu_1801.jpg'
-            break
-          case 'Lemongrass Chicken':
-            cardImage.src="./images/lemongrass-chicken-recipe_4.jpg"
-            break
-          case 'Tokyo Tonkotsu Ramen':
-            cardImage.src="./images/DSC_2483.jpg"
-            break
-          case 'Yoshinoya Gyudon':
-            cardImage.src="./images/yoshinoya-gyudon-recipe_5786.jpg"
-            break
-          case 'Malaysian Roti':
-            cardImage.src="./images/IAM_8210.jpg"
-            break
-          case 'Pot Bo Kho':
-            cardImage.src="./images/instant-pot-bo-kho-recipe_7469.jpg"
-            break
-          default:
-            cardImage.src="./images/ilp_logo.svg"
-
-          }
-          cardTitle.innerHTML = data
-          cardText.innerHTML = "Sample recipe for " + data
+        showRecipe(data);
       })
       .catch(err => {
-        const modal = document.getElementById('recipe_view')
-        const cardTitle = document.getElementById('card-title')
-        const cardText = document.getElementById('card-text')
-        const cardImage = document.getElementById('card-img')
-        cardImage.src="./images/ilp_logo.svg"
-        cardText.innerHTML = "You may have switched off your extension. Please turn it on and refresh the page."
-        modal.style = 'display: flex;'
-        cardImage.style="width: 70%; margin-left: 15%"
+        const count = parseInt(localStorage.getItem('count'));
+        const recipeName = localStorage.getItem(name);
+        if(count && count >= 2 && !recipeName) {
+          const modal = document.getElementById('recipe_view')
+          const cardTitle = document.getElementById('card-title')
+          const cardText = document.getElementById('card-text')
+          const cardImage = document.getElementById('card-img')
+          cardImage.src="./images/ilp_logo.svg"
+          cardTitle.innerHTML = ""
+          cardText.innerHTML = "You have exceeded your free recipe count! Please turn on your extension and refresh the page."
+          modal.style = 'display: flex;'
+          cardImage.style="width: 70%; margin-left: 15%"
+        } else {
+          showRecipe(name);
+          if(count && count <= 2 && !recipeName) {
+            localStorage.setItem('count', count + 1)
+            localStorage.setItem(name, true);
+          }
+          if(!count) {
+            localStorage.setItem('count', 1)
+            localStorage.setItem(name, name);
+          }
+        }
       })
-
-
   }
   </script>
 </body>
