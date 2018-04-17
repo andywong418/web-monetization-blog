@@ -117,8 +117,8 @@
   </footer>
   <script src="/client.js"></script>
   <script>
-
-  getMonetizationId('http://localhost:8080/pay/:id')
+  var domain = new URL(window.location).origin
+  getMonetizationId(domain + '/pay/:id')
     .then(id => {
       window.monetizationId = id
     })
@@ -163,8 +163,8 @@
 
   function readRecipe(e, name) {
     e.preventDefault();
-
-    fetch('http://localhost:8080/content/' + window.monetizationId + '/' + name)
+    var domain = new URL(window.location).origin
+    fetch(domain + '/content/' + window.monetizationId + '/' + name)
       .then(response => {
         if(!response.ok) {
           throw Error("ID undefined");
