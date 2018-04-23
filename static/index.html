@@ -164,11 +164,13 @@
   function readRecipe(e, name) {
     e.preventDefault();
     var domain = new URL(window.location).origin
+    console.log("domain?")
     fetch(domain + '/content/' + window.monetizationId + '/' + name)
       .then(response => {
         if(!response.ok) {
           throw Error("ID undefined");
         }
+	console.log("GETTING IN")
         return response.text();
       })
       .then(data => {

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "forever-monitor": "^1.7.1",
     "fs-extra": "^5.0.0",
     "koa": "^2.5.0",
     "koa-router": "^7.4.0",
