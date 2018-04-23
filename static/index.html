@@ -38,7 +38,7 @@
       <div class="container">
           <h1 class="jumbotron-heading">Foodie - the first web monetised recipe blog</h1>
           <p class="lead text-muted showoff">This is a demo site to show off the capabilities of <a href="https://github.com/interledger/rfcs/blob/master/0028-web-monetization/0028-web-monetization.md">Web Monetization</a> and <a href="https://interledger.org">Interledger</a>.</p>
-          <p class="lead text-muted turn"> Turn on your extensions to read a recipe! If you don't pay you can only see two for free.</p>
+          <p class="lead text-muted turn"> Turn on your extensions to read a recipe! If you don't pay you can only see two for free. Bonus: try scrolling!</p>
           <p class="lead text-muted"> All images are from <a href="http://iamafoodblog.com/">iamafoodblog</a>.
       </div>
     </section>
@@ -104,6 +104,38 @@
             <p class="lead text-muted">Price: $</p>
           </div>
         </div>
+        <div id="show-on-scroll" class="row">
+          <div class="col-md-4 text-center">
+            <div class="text-center recipe">
+
+              <img class="food-img" src="./images/donuts.jpg"/>
+              <small class="text-success">$ Paid Content</small>
+              <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Sfenj')"> Sfenj: Morrocan Donuts </a> </p>
+              <p class="lead text-muted">Time to make: 50 mins</p>
+              <p class="lead text-muted">Price: $</p>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="text-center recipe">
+
+              <img class="food-img" src="./images/roast-chicken.jpg"/>
+              <small class="text-success">$ Paid Content</small>
+              <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Roast Chicken')"> Roast Chicken </a> </p>
+              <p class="lead text-muted">Time to make: 90 mins</p>
+              <p class="lead text-muted">Price: $$</p>
+            </div>
+          </div>
+          <div class="col-md-4 text-center">
+            <div class="text-center recipe">
+
+              <img class="food-img" src="./images/grilled-bread.jpg"/>
+              <small class="text-success">$ Paid Content</small>
+              <p class="recipe-text"> <a href="#" onclick="readRecipe(event, 'Grilled Bread')"> Pan Grilled Morroccan bread </a> </p>
+              <p class="lead text-muted">Time to make: 50 mins</p>
+              <p class="lead text-muted">Price: $</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -127,7 +159,27 @@
     const modal = document.getElementById('recipe_view')
     modal.style = 'display: none;'
   }
-
+  window.onscroll = function(ev) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        // you're at the bottom of the page. Start paying.
+        console.log("scroll?")
+        var domain = new URL(window.location).origin
+        fetch(domain + '/show-more/' + window.monetizationId)
+        .then(response => {
+          if(!response.ok) {
+            throw Error("ID undefined");
+          }
+          return response.json();
+        })
+        .then(response => {
+          console.log("response", response);
+          if(response.paid) {
+            const showOnScroll = document.getElementById('show-on-scroll');
+            showOnScroll.style="display: flex;"
+          }
+        })
+    }
+  };
   function showRecipe(data) {
     const modal = document.getElementById('recipe_view')
     const cardTitle = document.getElementById('card-title')
@@ -152,6 +204,15 @@
         break
       case 'Pot Bo Kho':
         cardImage.src="./images/instant-pot-bo-kho-recipe_7469.jpg"
+        break
+      case 'Sfenj':
+        cardImage.src="./images/donuts.jpg"
+        break
+      case 'Roast Chicken':
+        cardImage.src="./images/roast-chicken.jpg"
+        break
+      case 'Grilled Bread':
+        cardImage.src="./images/grilled-bread.jpg"
         break
       default:
         cardImage.src="./images/ilp_logo.svg"

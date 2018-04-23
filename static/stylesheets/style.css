@@ -81,7 +81,9 @@
 .card-img-top {
   max-width: 100%;
 }
-
+#show-on-scroll {
+  display: none;
+}
 footer {
   display: flex;
   height: 200px;
